@@ -13,11 +13,12 @@
       gtag('js', new Date());
       gtag('config', 'G-8BVTMS5314');
     </script>
+    <script src="lumy-nav.js"></script>
 
     <style>
         :root {
             --aura-gradient: linear-gradient(135deg, #7ad7f0, #e600f6);
-            --translate-color: #ffcc00; /* Jaune/Or pour le côté "Traduction" */
+            --translate-color: #ffcc00;
             --bg: #ffffff;
             --text: #1a1a1a;
             --card: #f5f5f5;
@@ -57,9 +58,8 @@
         }
         .recrutement-bar a { color: var(--aura-end); text-decoration: none; font-weight: 900; }
 
-        /* HEADER AVEC LE LOGO PIMPÉ */
+        /* HEADER */
         header { padding: 15px 25px; border-bottom: 2px solid; border-image: var(--aura-gradient) 1; display: flex; align-items: center; justify-content: space-between; background: var(--bg); position: sticky; top: 0; z-index: 100; }
-        
         .logo-box { display: flex; align-items: center; gap: 8px; font-weight: 900; font-size: 24px; }
         .lumy-txt { background: var(--aura-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .translate-txt { color: var(--translate-color); text-transform: uppercase; font-size: 18px; letter-spacing: -1px; }
@@ -68,22 +68,45 @@
         main { flex: 1; padding: 20px; max-width: 1200px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 15px; }
 
         .controls { display: flex; align-items: center; justify-content: space-between; background: var(--card); padding: 10px 20px; border-radius: 12px; border: 1px solid rgba(128,128,128,0.1); }
-        select { background: transparent; color: var(--text); border: none; font-family: 'Inter'; font-weight: 600; outline: none; cursor: pointer; font-size: 14px; }
+        
+        select { 
+            background: var(--card); color: var(--text); 
+            border: 1px solid rgba(128,128,128,0.3); border-radius: 8px; 
+            padding: 8px; font-family: 'Inter'; font-weight: 600; 
+            outline: none; cursor: pointer; font-size: 13px; width: 100%; max-width: 220px;
+        }
+
         .arrow { background: var(--aura-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
 
         .translate-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; flex: 1; }
         @media (max-width: 800px) { .translate-grid { grid-template-columns: 1fr; } }
 
-        .box-wrapper { display: flex; flex-direction: column; gap: 10px; }
+        .box-wrapper { display: flex; flex-direction: column; gap: 10px; position: relative; }
         .label { font-size: 11px; font-weight: 900; opacity: 0.5; text-transform: uppercase; letter-spacing: 1px; }
 
         textarea, .output-area { 
             width: 100%; min-height: 350px; border-radius: 20px; padding: 25px; font-size: 20px; 
             border: 1px solid rgba(128,128,128,0.2); background: var(--card); color: var(--text); 
-            resize: none; outline: none; transition: 0.3s; line-height: 1.6;
+            resize: none; outline: none; transition: 0.3s; line-height: 1.6; box-sizing: border-box;
         }
         textarea:focus { border-color: var(--aura-start); box-shadow: 0 0 20px rgba(122, 215, 240, 0.1); }
         .output-area { border-left: 6px solid; border-image: var(--aura-gradient) 1; white-space: pre-wrap; position: relative; }
+
+        /* ICÔNE COPIER (DEUX FEUILLES) */
+        .copy-icon-btn {
+            position: absolute; bottom: 15px; right: 15px;
+            background: rgba(128, 128, 128, 0.1);
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .copy-icon-btn svg { fill: var(--text); width: 20px; height: 20px; transition: 0.3s; }
+        .copy-icon-btn:hover { background: rgba(128, 128, 128, 0.2); transform: scale(1.1); }
+        .copy-icon-btn:hover svg { fill: var(--aura-end); }
+        .copy-icon-btn.active svg { fill: #2ecc71; }
 
         .btn-translate {
             background: var(--aura-gradient); border: none; padding: 20px; border-radius: 15px;
@@ -93,6 +116,8 @@
         .btn-translate:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(230, 0, 246, 0.3); }
 
         .loading-dots { display: none; font-size: 14px; font-weight: 700; color: var(--aura-start); text-align: center; margin-top: 10px; }
+        .magic-aura { animation: sparkle 2s infinite ease-in-out; color: var(--aura-start); }
+        @keyframes sparkle { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; text-shadow: 0 0 10px var(--aura-start); } }
     </style>
 </head>
 <body>
@@ -100,7 +125,7 @@
 <div id="cookie-wall">
     <div class="cookie-box">
         <h2 style="background: var(--aura-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900;">CONTRAT DE FLUX</h2>
-        <p>Pour utiliser <strong>Lumy Translate</strong>, vous devez accepter nos conditions générales et l'utilisation de cookies analytiques pour l'expansion de l'écosystème.</p>
+        <p>Pour utiliser <strong>Lumy Translate</strong>, vous devez accepter nos conditions générales.</p>
         <button class="accept-btn" onclick="acceptConditions()">ACCEPTER ET ENTRER</button>
         <button class="exit-btn" onclick="window.location.href='https://google.com'">Refuser et quitter</button>
     </div>
@@ -121,61 +146,68 @@
 
 <main>
     <div class="controls">
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <span style="color: var(--aura-start); font-size: 12px; font-weight: 900;">DE :</span>
+        <div style="display: flex; flex-direction: column; gap: 5px;">
+            <span style="color: var(--aura-start); font-size: 10px; font-weight: 900;">SOURCE :</span>
             <select id="fromLang">
-                <option value="auto">DÉTECTION AUTOMATIQUE</option>
-                <option value="fr">FRANÇAIS</option>
-                <option value="en">ANGLAIS</option>
-                <option value="es">ESPAGNOL</option>
-                <option value="de">ALLEMAND</option>
-                <option value="it">ITALIEN</option>
-                <option value="jp">JAPONAIS</option>
-                <option value="cn">CHINOIS</option>
-                <option value="ru">RUSSE</option>
-                <option value="ar">ARABE</option>
+                <option value="auto">✨ DÉTECTION AUTOMATIQUE</option>
             </select>
         </div>
         <div class="arrow">➜</div>
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <span style="color: var(--aura-end); font-size: 12px; font-weight: 900;">VERS :</span>
-            <select id="toLang">
-                <option value="en">ANGLAIS</option>
-                <option value="fr">FRANÇAIS</option>
-                <option value="es">ESPAGNOL</option>
-                <option value="de">ALLEMAND</option>
-                <option value="it">ITALIEN</option>
-                <option value="jp">JAPONAIS</option>
-                <option value="cn">CHINOIS</option>
-                <option value="ru">RUSSE</option>
-                <option value="ar">ARABE</option>
-                <option value="pt">PORTUGAIS</option>
-            </select>
+        <div style="display: flex; flex-direction: column; gap: 5px;">
+            <span style="color: var(--aura-end); font-size: 10px; font-weight: 900;">CIBLE :</span>
+            <select id="toLang"></select>
         </div>
     </div>
 
     <div class="translate-grid">
         <div class="box-wrapper">
             <span class="label">Texte Source</span>
-            <textarea id="sourceText" placeholder="Entrez le texte à analyser..."></textarea>
+            <textarea id="sourceText" placeholder="Saisissez ici..."></textarea>
         </div>
         <div class="box-wrapper">
-            <span class="label">Traduction Aura</span>
+            <span class="label">Traduction Aura <span class="magic-aura">✨</span></span>
             <div id="targetText" class="output-area">En attente du flux...</div>
+            
+            <button class="copy-icon-btn" id="copyBtn" onclick="copyTranslation()" title="Copier la traduction">
+                <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+            </button>
         </div>
     </div>
 
     <button class="btn-translate" onclick="processTranslation()">
-        EXÉCUTER LA TRADUCTION
+        DÉPLOYER LA TRADUCTION
     </button>
-    <div id="loader" class="loading-dots">AURA DÉCRYPTE LES DONNÉES...</div>
+    <div id="loader" class="loading-dots">DÉCRYPTAGE DU FLUX MONDIAL...</div>
 </main>
 
 <script>
+    const paysDuMonde = ["Afghanistan", "Afrique du Sud", "Albanie", "Algérie", "Allemagne", "Andorre", "Angola", "Antigua-et-Barbuda", "Arabie Saoudite", "Argentine", "Arménie", "Australie", "Autriche", "Azerbaïdjan", "Bahamas", "Bahreïn", "Bangladesh", "Barbade", "Belgique", "Belize", "Bénin", "Bhoutan", "Biélorussie", "Birmanie", "Bolivie", "Bosnie-Herzégovine", "Botswana", "Brésil", "Brunei", "Bulgarie", "Burkina Faso", "Burundi", "Cambodge", "Cameroun", "Canada", "Cap-Vert", "Chili", "Chine", "Chypre", "Colombie", "Comores", "Congo", "Corée du Nord", "Corée du Sud", "Costa Rica", "Côte d'Ivoire", "Croatie", "Cuba", "Danemark", "Djibouti", "Dominique", "Égypte", "Émirats Arabes Unis", "Équateur", "Érythrée", "Espagne", "Estonie", "Eswatini", "États-Unis", "Éthiopie", "Fidji", "Finlande", "France", "Gabon", "Gambie", "Géorgie", "Ghana", "Grèce", "Grenade", "Guatemala", "Guinée", "Guinée équatoriale", "Guinée-Bissau", "Guyana", "Haïti", "Honduras", "Hongrie", "Inde", "Indonésie", "Irak", "Iran", "Irlande", "Islande", "Israël", "Italie", "Jamaïque", "Japon", "Jordanie", "Kazakhstan", "Kenya", "Kirghizistan", "Kiribati", "Koweït", "Laos", "Lesotho", "Lettonie", "Liban", "Libéria", "Libye", "Liechtenstein", "Lituanie", "Luxembourg", "Macédoine", "Madagascar", "Malaisie", "Malawi", "Maldives", "Mali", "Malte", "Maroc", "Maurice", "Mauritanie", "Mexique", "Micronésie", "Moldavie", "Monaco", "Mongolie", "Monténégro", "Mozambique", "Namibie", "Nauru", "Népal", "Nicaragua", "Niger", "Nigéria", "Norvège", "Nouvelle-Zélande", "Oman", "Ouganda", "Ouzbékistan", "Pakistan", "Palaos", "Palestine", "Panama", "Papouasie-Nouvelle-Guinée", "Paraguay", "Pays-Bas", "Pérou", "Philippines", "Pologne", "Portugal", "Qatar", "République centrafricaine", "République démocratique du Congo", "République dominicaine", "Roumanie", "Royaume-Uni", "Russie", "Rwanda", "Saint-Christophe-et-Niévès", "Sainte-Lucie", "Saint-Marin", "Saint-Vincent-et-les-Grenadines", "Salomon", "Salvador", "Samoa", "Sao Tomé-et-Principe", "Sénégal", "Serbie", "Seychelles", "Sierra Leone", "Singapour", "Slovaquie", "Slovénie", "Somalie", "Soudan", "Soudan du Sud", "Sri Lanka", "Suède", "Suisse", "Suriname", "Syrie", "Tadjikistan", "Tanzanie", "Tchad", "Tchéquie", "Thaïlande", "Timor oriental", "Togo", "Tonga", "Trinité-et-Tobago", "Tunisie", "Turkménistan", "Turquie", "Tuvalu", "Ukraine", "Uruguay", "Vanuatu", "Vatican", "Venezuela", "Vietnam", "Yémen", "Zambie", "Zimbabwe"];
+
+    function initSelects() {
+        const from = document.getElementById('fromLang');
+        const to = document.getElementById('toLang');
+        paysDuMonde.forEach(pays => {
+            from.add(new Option(pays.toUpperCase(), pays));
+            to.add(new Option(pays.toUpperCase(), pays));
+        });
+        to.value = "États-Unis";
+    }
+    initSelects();
+
+    function copyTranslation() {
+        const text = document.getElementById('targetText').innerText;
+        const btn = document.getElementById('copyBtn');
+        if (text === "En attente du flux..." || text === "") return;
+
+        navigator.clipboard.writeText(text).then(() => {
+            btn.classList.add('active');
+            setTimeout(() => btn.classList.remove('active'), 1500);
+        });
+    }
+
     function acceptConditions() {
         localStorage.setItem('lumy_translate_consent', 'true');
         document.getElementById('cookie-wall').style.display = 'none';
-        gtag('consent', 'update', {'analytics_storage': 'granted'});
     }
 
     window.onload = function() {
@@ -188,11 +220,10 @@
         const text = document.getElementById('sourceText').value;
         const target = document.getElementById('targetText');
         const loader = document.getElementById('loader');
-        const from = document.getElementById('fromLang').selectedOptions[0].text;
-        const to = document.getElementById('toLang').selectedOptions[0].text;
+        const from = document.getElementById('fromLang').value;
+        const to = document.getElementById('toLang').value;
 
         if (!text.trim()) return;
-
         loader.style.display = 'block';
         target.style.opacity = '0.4';
 
@@ -206,20 +237,16 @@
                 body: JSON.stringify({
                     model: "open-mistral-7b",
                     messages: [
-                        { 
-                          role: "system", 
-                          content: `Tu es Lumy Translate. Mission : Traduire de [${from}] vers [${to}]. Détection auto si besoin. Réponse brute sans blabla.` 
-                        },
+                        { role: "system", content: `Tu es Lumy Translate. Traduis de [${from}] vers [${to}]. Réponse brute.` },
                         { role: "user", content: text }
                     ],
                     temperature: 0.1
                 })
             });
-
             const data = await response.json();
             target.innerText = data.choices[0].message.content;
         } catch (e) {
-            target.innerText = "ERREUR : Flux Aura interrompu.";
+            target.innerText = "ERREUR : Flux interrompu.";
         } finally {
             loader.style.display = 'none';
             target.style.opacity = '1';
